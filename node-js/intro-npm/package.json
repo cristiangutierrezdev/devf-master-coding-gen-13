@@ -1,0 +1,15 @@
+{
+  "name": "intro-npm",
+  "version": "1.0.0",
+  "description": "Esto es una descripcion prueba",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Devf",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
