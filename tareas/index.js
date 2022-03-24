@@ -7,9 +7,13 @@ const btn = document.querySelector('#btn')
 */ 
 function crearTarea() {
   const value = input.value
+  const data = {
+    titulo:value
+  }
+  
   const options = {
     method: 'POST',
-    body: JSON.stringify({titulo:value}),
+    body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json'
     }
@@ -19,9 +23,13 @@ function crearTarea() {
   .then(function(result){
     return result.json()
   }).then(function(result){
-    console.log(result)
+    if(result.errors){
+      alert(result.errors.titulo.message)
+    } else {
+      alert('tarea creada')
+    }
   }).catch(function(error){
-    alert(error)
+    alert(error.message)
   })
 }
 
