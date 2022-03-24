@@ -91,4 +91,23 @@ function modificarDatos() {
   });
 }
 
-modificarDatos()
+// modificarDatos()
+
+function borrarTarea() {
+  const options = {
+    method: 'DELETE',
+  };
+
+  fetch('https://mysterious-plateau-36285.herokuapp.com/api/v1/borrar/tarea/623be066ca967e001728b9b1', options)
+  .then((result) => {
+    return result.json();
+  })
+  .then((result) => {
+    console.log(result);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
+
+borrarTarea() 
