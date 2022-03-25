@@ -1,19 +1,22 @@
-// Obtenemos los elemetos HTML que vamos a utilizar
-const input = document.querySelector('#titulo');
-const btn = document.querySelector('#btn');
+const inputTitulo = document.querySelector('#titulo');
+const inputDescripcion = document.querySelector('#descripcion');
+const btnCrear = document.querySelector('#btnCrear');
+const contenedorLista = document.querySelector('#lista');
 
-/*
-  La funcion obtiene el valor del input y crea una tarea nueva en la API
-*/
+// Crea una tarea en la API
+// Crea una tarea en la API
+// Crea una tarea en la API
 function crearTarea() {
-  const value = input.value;
-  const data = {
-    titulo: value,
+  const inputTituloValor = inputTitulo.value;
+  const inputDescripcionValor = inputDescripcion.value;
+  const tarea = {
+    titulo: inputTituloValor,
+    descripcion: inputDescripcionValor,
   };
 
-  const options = {
+  const fetchConfig = {
     method: 'POST',
-    body: JSON.stringify(data),
+    body: JSON.stringify(tarea),
     headers: {
       'Content-Type': 'application/json',
     },
@@ -21,93 +24,81 @@ function crearTarea() {
 
   fetch(
     'https://mysterious-plateau-36285.herokuapp.com/api/v1/crear/tarea',
-    options,
-  )
-    .then(function (result) {
-      return result.json();
-    })
-    .then(function (result) {
-      if (result.errors) {
-        alert(result.errors.titulo.message);
-      } else {
-        console.log(result);
-        alert('tarea creada');
-      }
-    })
-    .catch(function (error) {
-      alert(error.message);
-    });
-}
-
-// Le decimos al boton que cuando hagan click en el ejecute
-// la funcion crearTarea previamente creada
-btn.addEventListener('click', crearTarea);
-
-// EJERCICIOS
-
-// GET
-// Hacemos una peticion de tipo GET a la API para obtener un elemento por su ID
-function obtenerData() {
-  fetch(
-    'https://mysterious-plateau-36285.herokuapp.com/api/v1/obtener/tarea/623be066ca967e001728b9b1',
+    fetchConfig,
   )
     .then((result) => {
       return result.json();
     })
     .then((result) => {
-      console.log(result);
+      limpiarIputs();
+      obtenerTareas();
     })
     .catch((err) => {
       console.log(err);
     });
 }
 
-// obtenerData()
+// Limpia el valor de los inputs
+// Limpia el valor de los inputs
+// Limpia el valor de los inputs
+function limpiarIputs() {
+  inputTitulo.value = '';
+  inputDescripcion.value = '';
+}
 
-// PUT
+// Obtiene todas las tareas de la API
+// Obtiene todas las tareas de la API
+// Obtiene todas las tareas de la API
+function obtenerTareas() {
+  fetch(
+    'https://mysterious-plateau-36285.herokuapp.com/api/v1/obtener/todas/tareas',
+  )
+    .then((result) => {
+      return result.json();
+    })
+    .then((result) => {
+      mostrarTareas(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
 
-function modificarDatos() {
-  const data = {
-    titulo: 'Cambiamos el titulo :D',
-  };
+// Crea el elemento HTML li por cada tarea con su contenido y lo agrega a la lista (ul) 
+// Crea el elemento HTML li por cada tarea con su contenido y lo agrega a la lista (ul) 
+// Crea el elemento HTML li por cada tarea con su contenido y lo agrega a la lista (ul) 
+function mostrarTareas(arrayTareas) {
+  // Antes de agregar contenido a la lista limpiamos el contenedor(ul)
+  contenedorLista.innerHTML = '';
+  
+  // Antes de crear los elementos invertimos el arreglo, el primero pasa a ser el ultimo y el ultimo el primero
+  arrayTareas = arrayTareas.reverse();
+  
+  // Recorremos el arreglo y creamos un li con titulo y parrafo por cada elemento en el arreglo
+  arrayTareas.forEach((tarea) => {
+    // Esto crea un li vacio Ejemplo -->  <li></li>
+    const li = document.createElement('li');
+    // Creamos el contenido del li con el titulo de la tarea
+    let liContent = `
+        <h3>${tarea.titulo}</h3>
+    `;
+    // Si la tarea tiene descripcion, creamos el contenido con el titulo y la descripcion
+    if (tarea.descripcion) {
+      liContent = `
+      <h3>${tarea.titulo}</h3>
+      <p>${tarea.descripcion}</p>`;
+    }
 
-  const options = {
-    method: 'PUT',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  fetch('https://mysterious-plateau-36285.herokuapp.com/api/v1/modificar/tarea/623be066ca967e001728b9b1', options)
-  .then((result) => {
-    return result.json();
-  })
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    console.log(err);
+    // agregamos el contenido al li
+    li.innerHTML = liContent;
+    
+    // agregamos el li a la lista
+    contenedorLista.appendChild(li);
   });
 }
 
-// modificarDatos()
+// Le agregamos el evento click al boton
+btnCrear.addEventListener('click', crearTarea);
 
-function borrarTarea() {
-  const options = {
-    method: 'DELETE',
-  };
-
-  fetch('https://mysterious-plateau-36285.herokuapp.com/api/v1/borrar/tarea/623be066ca967e001728b9b1', options)
-  .then((result) => {
-    return result.json();
-  })
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-}
-
-borrarTarea() 
+// Activamos la funcion obtenerTareas para traer la data cuando cargue la pagina
+obtenerTareas();
