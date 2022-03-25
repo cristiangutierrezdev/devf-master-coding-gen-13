@@ -89,6 +89,7 @@ function mostrarTareas(arrayTareas) {
       <p>${tarea.descripcion}</p>`;
     }
 
+    li.id = tarea._id
     // agregamos el contenido al li
     li.innerHTML = liContent;
     
